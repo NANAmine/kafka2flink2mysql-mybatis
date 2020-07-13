@@ -3,6 +3,7 @@ package com.peigen;
 /**
  * Created by Administrator on 2020/7/4.
  */
+import com.alibaba.fastjson.JSONObject;
 import com.google.gson.Gson;
 import org.apache.flink.api.common.functions.MapFunction;
 import org.apache.flink.api.common.serialization.SimpleStringSchema;
@@ -23,37 +24,50 @@ public class KafkaSinkMysql {
     public static void main(String[] args) throws Exception {
         final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
         Properties props = new Properties();
-        props.put("bootstrap.servers", "peigen004:9092");
-        props.put("group.id", "test");
+        String brokers = "zmnode06:6667,zmnode07:6667,zmnode08:6667";
+        String KAFKA_GROUP ="rt_xgeop";
+        String topic="rt_xgeop_jxcgoodslist";
+        props.put("bootstrap.servers", brokers);
+        props.put("group.id", KAFKA_GROUP);
         //props.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
         //props.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
-        //props.put("enable.auto.commit", "true");
+        props.put("enable.auto.commit", "true");
         props.put("auto.offset.reset", "latest");
-        SingleOutputStreamOperator<Employee> empStream = env.addSource(new FlinkKafkaConsumer011<String>(
-                "employee",   //这个 kafka topic 需和生产消息的 topic 一致
+        SingleOutputStreamOperator<OrderDetail> empStream = env.addSource(new FlinkKafkaConsumer011<String>(
+                //这个 kafka topic 需和生产消息的 topic 一致
+                topic,
                 new SimpleStringSchema(),
                 props)).setParallelism(1)
-                .map(new MapFunction<String, Employee>() {
+                .map(new MapFunction<String, OrderDetail>() {
+                    //解析字符串成JSON对象
                     @Override
-                    public Employee map(String string) throws Exception {
-                        Gson gson = new Gson();
-                        return gson.fromJson(string,Employee.class);
+                    public OrderDetail map(String string) throws Exception {
+                        //Gson gson = new Gson();
+                        String[] list = string.split(",");
+                        OrderDetail orderDetail = new OrderDetail();
+                        orderDetail.setBillno(list[0]);
+                        orderDetail.setDjlb(list[1]);
+                        orderDetail.setHjzje(list[2]);
+                        orderDetail.setHjzke(list[3]);
+                        orderDetail.setMkt(list[4]);
+                        orderDetail.setRqsj(list[5]);
+                        return orderDetail;
                     }
-                }); //，解析字符串成JSON对象
+                });
 
         //开个一分钟的窗口去聚合
-        empStream.timeWindowAll(Time.minutes(1)).apply(new AllWindowFunction<Employee, List<Employee>, TimeWindow>() {
+        empStream.timeWindowAll(Time.seconds(10)).apply(new AllWindowFunction<OrderDetail, List<OrderDetail>, TimeWindow>() {
             @Override
-            public void apply(TimeWindow window, Iterable<Employee> values, Collector<List<Employee>> out) throws Exception {
-                ArrayList<Employee> employees = Lists.newArrayList(values);
-                if (employees.size() > 0) {
-                    System.out.println("1 分钟内收集到 employee 的数据条数是：" + employees.size());
-                    out.collect(employees);
+            public void apply(TimeWindow window, Iterable<OrderDetail> values, Collector<List<OrderDetail>> out) throws Exception {
+                ArrayList<OrderDetail> orderDetails = Lists.newArrayList(values);
+                if (orderDetails.size() > 0) {
+                    System.out.println("10 秒内收集到 orderDetails 的数据条数是：" + orderDetails.size());
+                    out.collect(orderDetails);
                 }
             }
-        }).addSink(new SinkToMySQL());
+        }).addSink(new SinkOrderToMySQL());
 
-        //empStream.print(); //调度输出
+        empStream.print(); //调度输出
         env.execute("flink kafka to Mysql");
 
     }

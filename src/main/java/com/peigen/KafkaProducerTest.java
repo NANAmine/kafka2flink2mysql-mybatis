@@ -1,8 +1,11 @@
+/*
 package com.peigen;
 
+*/
 /**
  * Created by Administrator on 2020/7/4.
- */
+ *//*
+
 import com.google.gson.Gson;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.clients.producer.KafkaProducer;
@@ -50,3 +53,4 @@ public class KafkaProducerTest {
     }
 }
 
+*/

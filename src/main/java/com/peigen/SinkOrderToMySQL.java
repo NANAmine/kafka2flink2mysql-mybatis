@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * Created by Administrator on 2020/7/4.
  */
-public class SinkToMySQL extends RichSinkFunction<List<Employee>> {
+public class SinkOrderToMySQL extends RichSinkFunction<List<OrderDetail>> {
     PreparedStatement ps;
     BasicDataSource dataSource;
     private Connection connection;
@@ -26,7 +26,7 @@ public class SinkToMySQL extends RichSinkFunction<List<Employee>> {
         super.open(parameters);
         dataSource = new BasicDataSource();
         connection = getConnection(dataSource);
-        String sql = "insert into employee(id, name, password, age, salary, department) values(?, ?, ?, ?, ?, ?);";
+        String sql = "insert into eop_online_ddmx(billno, mkt, djlb, rqsj, hjzje, hjzke) values(?, ?, ?, ?, ?, ?);";
         ps = this.connection.prepareStatement(sql);
     }
 
@@ -50,18 +50,19 @@ public class SinkToMySQL extends RichSinkFunction<List<Employee>> {
      * @throws Exception
      */
     @Override
-    public void invoke(List<Employee> value, Context context) throws Exception {
+    public void invoke(List<OrderDetail> value, Context context) throws Exception {
         //遍历数据集合
-        for (Employee employee : value) {
-            ps.setString(1, employee.getId());
-            ps.setString(2, employee.getName());
-            ps.setString(3, employee.getPassword());
-            ps.setString(4, employee.getAge());
-            ps.setString(5, employee.getSalary());
-            ps.setString(6, employee.getDepartment());
+        for (OrderDetail orderDetail : value) {
+            ps.setString(1, orderDetail.getBillno());
+            ps.setString(2, orderDetail.getDjlb());
+            ps.setString(3, orderDetail.getHjzje());
+            ps.setString(4, orderDetail.getHjzke());
+            ps.setString(5, orderDetail.getMkt());
+            ps.setString(6, orderDetail.getRqsj());
             ps.addBatch();
         }
-        int[] count = ps.executeBatch();//批量后执行
+        //批量后执行
+        int[] count = ps.executeBatch();
         System.out.println("成功了插入了" + count.length + "行数据");
     }
 
@@ -69,9 +70,9 @@ public class SinkToMySQL extends RichSinkFunction<List<Employee>> {
     private static Connection getConnection(BasicDataSource dataSource) {
         dataSource.setDriverClassName("com.mysql.jdbc.Driver");
         //注意，替换成自己本地的 mysql 数据库地址和用户名、密码
-        dataSource.setUrl("jdbc:mysql://peigen004:3306/flinktest?useUnicode=true&characterEncoding=UTF-8"); //test为数据库名
-        dataSource.setUsername("root"); //数据库用户名
-        dataSource.setPassword("123456"); //数据库密码
+        dataSource.setUrl("jdbc:mysql://10.153.252.141:4000/jeesite_dev?useUnicode=true&characterEncoding=UTF-8&useSSL=false");
+        dataSource.setUsername("root");
+        dataSource.setPassword("123456");
         //设置连接池的一些参数
         dataSource.setInitialSize(10);
         dataSource.setMaxTotal(50);

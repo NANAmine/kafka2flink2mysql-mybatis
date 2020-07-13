@@ -4,14 +4,14 @@ package com.peigen;
  * Created by Administrator on 2020/7/4.
  */
 public class Employee {
-    public int id;
+    public String id;
     public String name;
     public String password;
-    public int age;
-    public Integer salary;
+    public String age;
+    public String salary;
     public String department;
 
-    public Employee(int id, String name, String password, int age, Integer salary, String department) {
+    public Employee(String id, String name, String password, String age, String salary, String department) {
         this.id = id;
         this.name = name;
         this.password = password;
@@ -36,11 +36,11 @@ public class Employee {
                 '}';
     }
 
-    public Integer getSalary() {
+    public String getSalary() {
         return salary;
     }
 
-    public void setSalary(Integer salary) {
+    public void setSalary(String salary) {
         this.salary = salary;
     }
 
@@ -52,11 +52,11 @@ public class Employee {
         this.department = department;
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -76,11 +76,11 @@ public class Employee {
         this.password = password;
     }
 
-    public int getAge() {
+    public String getAge() {
         return age;
     }
 
-    public void setAge(int age) {
+    public void setAge(String age) {
         this.age = age;
     }
 
