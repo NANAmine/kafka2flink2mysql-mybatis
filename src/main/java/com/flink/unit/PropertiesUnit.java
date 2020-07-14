@@ -18,7 +18,7 @@ public class PropertiesUnit {
     private static ResourceLoad loader = ResourceLoad.getInstance();
     private static ConcurrentMap<String, String> configMap = new ConcurrentHashMap<String, String>();
     static String path = System.getProperty("user.dir") + File.separator + "res" + File.separator + "config.properties";
-    private static final String DEFAULT_CONFIG_FILE = "test.properties";
+    private static final String DEFAULT_CONFIG_FILE = "/resources/config.properties";
 
     private static Properties prop = null;
 
