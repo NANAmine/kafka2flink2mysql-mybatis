@@ -24,11 +24,11 @@ public class OrderDetail {
      */
     public String rqsj;
     /**
-     *总金额
+     * 总金额
      */
     public Double hjzje;
     /**
-     *总折扣
+     * 总折扣
      */
     public Double hjzke;
 
@@ -103,6 +103,18 @@ public class OrderDetail {
 
     public void setHjzke(Double hjzke) {
         this.hjzke = hjzke;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        OrderDetail u = (OrderDetail) obj;
+        return billno.equals(u.billno);
+    }
+
+    @Override
+    public int hashCode() {
+        String in = billno;
+        return in.hashCode();
     }
 }
 

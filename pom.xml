@@ -130,7 +130,7 @@
                             <outputDirectory>${project.build.directory}/conf</outputDirectory>
                             <resources>
                                 <resource>
-                                    <directory>src/main/resources</directory>
+                                    <directory>conf</directory>
                                     <filtering>true</filtering>
                                 </resource>
                             </resources>

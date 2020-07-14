@@ -18,16 +18,17 @@ import org.apache.flink.streaming.api.windowing.time.Time;
 import org.apache.flink.streaming.api.windowing.windows.TimeWindow;
 import org.apache.flink.streaming.connectors.kafka.FlinkKafkaConsumer011;
 import org.apache.flink.util.Collector;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Properties;
+import java.util.*;
 
 public class KafkaSinkMysql {
+    private static Logger logger = LoggerFactory.getLogger(KafkaSinkMysql.class);
     public static void main(String[] args) throws Exception {
         final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
 //    设置检查点时间为10秒
-        env.enableCheckpointing(10000);
+        env.enableCheckpointing(5000);
 //    设置检查模式  恰好一次
         env.getCheckpointConfig().setCheckpointingMode(CheckpointingMode.EXACTLY_ONCE);
 //    设置检查点之间的最小暂停时间
@@ -45,6 +46,7 @@ public class KafkaSinkMysql {
         props.put("group.id", constant.kafka_group);
         props.put("enable.auto.commit", constant.commit);
         props.put("auto.offset.reset", constant.reset);
+        logger.info("开始消费kafka数据");
         SingleOutputStreamOperator<OrderDetail> empStream = env.addSource(new FlinkKafkaConsumer011<String>(
                 //这个 kafka topic 需和生产消息的 topic 一致
                 constant.topic,
@@ -68,19 +70,24 @@ public class KafkaSinkMysql {
                 });
 
         //开个一分钟的窗口去聚合
+        logger.info("开启timeWindow");
         empStream.timeWindowAll(Time.seconds(Long.parseLong(constant.timeWindow))).apply(new AllWindowFunction<OrderDetail, List<OrderDetail>, TimeWindow>() {
             @Override
             public void apply(TimeWindow window, Iterable<OrderDetail> values, Collector<List<OrderDetail>> out) throws Exception {
                 ArrayList<OrderDetail> orderDetails = Lists.newArrayList(values);
+                //数据去重
+                Set set = new  HashSet();
+                List<OrderDetail> newList = new  ArrayList();
+                set.addAll(orderDetails);
+                newList.addAll(set);
                 if (orderDetails.size() > 0) {
                     System.out.println("10 秒内收集到 orderDetails 的数据条数是：" + orderDetails.size());
-                    out.collect(orderDetails);
+                    System.out.println("重复数据条数" + (orderDetails.size()-newList.size()));
+                    out.collect(newList);
                 }
             }
         }).addSink(new SinkOrderToMySQL());
-
         empStream.print(); //调度输出
         env.execute("flink kafka to Mysql");
-
     }
 }
