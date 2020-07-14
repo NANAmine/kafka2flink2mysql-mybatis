@@ -1,4 +1,4 @@
-package com.peigen;
+package com.flink.entity;
 
 /**
  * @Author LT-0024
@@ -26,13 +26,13 @@ public class OrderDetail {
     /**
      *总金额
      */
-    public String hjzje;
+    public Double hjzje;
     /**
      *总折扣
      */
-    public String hjzke;
+    public Double hjzke;
 
-    public OrderDetail(String billno, String mkt, String djlb, String rqsj, String hjzje, String hjzke) {
+    public OrderDetail(String billno, String mkt, String djlb, String rqsj, Double hjzje, Double hjzke) {
         this.billno = billno;
         this.mkt = mkt;
         this.djlb = djlb;
@@ -89,19 +89,19 @@ public class OrderDetail {
         this.rqsj = rqsj;
     }
 
-    public String getHjzje() {
+    public Double getHjzje() {
         return hjzje;
     }
 
-    public void setHjzje(String hjzje) {
+    public void setHjzje(Double hjzje) {
         this.hjzje = hjzje;
     }
 
-    public String getHjzke() {
+    public Double getHjzke() {
         return hjzke;
     }
 
-    public void setHjzke(String hjzke) {
+    public void setHjzke(Double hjzke) {
         this.hjzke = hjzke;
     }
 }

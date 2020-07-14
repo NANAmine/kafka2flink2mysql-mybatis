@@ -1,4 +1,5 @@
-package com.peigen;
+package com.flink.conn;
+import com.flink.entity.Employee;
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.apache.flink.configuration.Configuration;
 import org.apache.flink.streaming.api.functions.sink.RichSinkFunction;
