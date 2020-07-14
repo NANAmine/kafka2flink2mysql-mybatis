@@ -12,6 +12,7 @@ import java.util.concurrent.ConcurrentMap;
 
 /**
  * 用ConcurrentMap来缓存属性文件的key-value
+ * @author LT-0024
  */
 public class PropertiesUnit {
 

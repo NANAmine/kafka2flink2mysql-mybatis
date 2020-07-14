@@ -3,7 +3,7 @@ package com.flink;
 /**
  * Created by Administrator on 2020/7/4.
  */
-import com.flink.conn.SinkOrderToMySQL;
+import com.flink.conn.SinkOrderToMySql;
 import com.flink.entity.OrderDetail;
 import com.flink.unit.Constant;
 import org.apache.flink.api.common.functions.MapFunction;
@@ -23,6 +23,9 @@ import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
+/**
+ * @author LT-0024
+ */
 public class KafkaSinkMysql {
     private static Logger logger = LoggerFactory.getLogger(KafkaSinkMysql.class);
     public static void main(String[] args) throws Exception {
@@ -43,30 +46,6 @@ public class KafkaSinkMysql {
         Properties props = new Properties();
         Constant constant = new Constant();
         props.put("bootstrap.servers", constant.brokers);
-        System.out.println(constant.brokers);
-        System.out.println(constant.kafka_group);
-        System.out.println(constant.commit);
-        System.out.println(constant.reset);
-        System.out.println(constant.brokers);
-        System.out.println(constant.kafka_group);
-        System.out.println(constant.commit);
-        System.out.println(constant.reset);
-        System.out.println(constant.brokers);
-        System.out.println(constant.kafka_group);
-        System.out.println(constant.commit);
-        System.out.println(constant.reset);
-        System.out.println(constant.brokers);
-        System.out.println(constant.kafka_group);
-        System.out.println(constant.commit);
-        System.out.println(constant.reset);
-        System.out.println(constant.brokers);
-        System.out.println(constant.kafka_group);
-        System.out.println(constant.commit);
-        System.out.println(constant.reset);
-        System.out.println(constant.brokers);
-        System.out.println(constant.kafka_group);
-        System.out.println(constant.commit);
-        System.out.println(constant.reset);
         props.put("group.id", constant.kafka_group);
         props.put("enable.auto.commit", constant.commit);
         props.put("auto.offset.reset", constant.reset);
@@ -110,7 +89,7 @@ public class KafkaSinkMysql {
                     out.collect(newList);
                 }
             }
-        }).addSink(new SinkOrderToMySQL());
+        }).addSink(new SinkOrderToMySql());
         empStream.print(); //调度输出
         env.execute("flink kafka to Mysql");
     }

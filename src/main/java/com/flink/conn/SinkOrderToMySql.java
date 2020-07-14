@@ -10,9 +10,11 @@ import java.sql.PreparedStatement;
 import java.util.List;
 
 /**
- * Created by Administrator on 2020/7/4.
+ *
+ * @author Administrator
+ * @date 2020/7/4
  */
-public class SinkOrderToMySQL extends RichSinkFunction<List<OrderDetail>> {
+public class SinkOrderToMySql extends RichSinkFunction<List<OrderDetail>> {
     PreparedStatement ps;
     BasicDataSource dataSource;
     private Connection connection;
