@@ -73,7 +73,7 @@
 
     <build>
         <plugins>
-            <plugin>
+            <!--<plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-shade-plugin</artifactId>
             <version>3.1.0</version>
@@ -90,9 +90,9 @@
                         <transformers>
                             <transformer
                                     implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                <!--如果要打包的话，这里要换成对应的 main class-->
-                                <!--<addClasspath>true</addClasspath>
-                                <classpathPrefix>lib/</classpathPrefix>-->
+                                &lt;!&ndash;如果要打包的话，这里要换成对应的 main class&ndash;&gt;
+                                &lt;!&ndash;<addClasspath>true</addClasspath>
+                                <classpathPrefix>lib/</classpathPrefix>&ndash;&gt;
                                 <mainClass>com.flink.KafkaSinkMysql</mainClass>
                             </transformer>
                             <transformer
@@ -108,7 +108,7 @@
                                     <exclude>META-INF/*.SF</exclude>
                                     <exclude>META-INF/*.DSA</exclude>
                                     <exclude>META-INF/*.RSA</exclude>
-<!--                                    <exclude>META-INF/maven/*</exclude>-->
+&lt;!&ndash;                                    <exclude>META-INF/maven/*</exclude>&ndash;&gt;
                                     <exclude>**/*.properties</exclude>
                                 </excludes>
                             </filter>
@@ -116,7 +116,26 @@
                     </configuration>
                 </execution>
             </executions>
-        </plugin>
+        </plugin>-->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <addClasspath>true</addClasspath>
+                            <classpathPrefix>lib/</classpathPrefix>
+                            <mainClass>com.flink.KafkaSinkMysql</mainClass>
+                        </manifest>
+                    </archive>
+                    <excludes>
+                        <exclude>META-INF/*.SF</exclude>
+                        <exclude>META-INF/*.DSA</exclude>
+                        <exclude>META-INF/*.RSA</exclude>
+                        <exclude>**/*.properties</exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
             <plugin>
                 <artifactId>maven-resources-plugin</artifactId>
                 <executions>
@@ -130,10 +149,29 @@
                             <outputDirectory>${project.build.directory}/conf</outputDirectory>
                             <resources>
                                 <resource>
-                                    <directory>conf</directory>
+                                    <directory>src/main/resources</directory>
                                     <filtering>true</filtering>
                                 </resource>
                             </resources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>copy-dependencies</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.directory}/lib</outputDirectory>
+                            <overWriteReleases>false</overWriteReleases>
+                            <overWriteSnapshots>false</overWriteSnapshots>
+                            <overWriteIfNewer>true</overWriteIfNewer>
                         </configuration>
                     </execution>
                 </executions>

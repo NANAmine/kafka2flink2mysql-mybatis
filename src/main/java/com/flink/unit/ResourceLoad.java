@@ -33,8 +33,11 @@ public final class ResourceLoad {
         String configPath = System.getProperty("configurePath");
 
         if (configPath == null) {
-            String path = System.getProperty("user.dir") + File.separator + "conf" + File.separator + "config.properties";
-            filePath = path;
+            try {
+                filePath = this.getClass().getClassLoader().getResource(fileName).getPath();
+            }catch (Exception e){
+                filePath = System.getProperty("user.dir") + File.separator + "conf" + File.separator + "config.properties";
+            }
         } else {
             filePath = configPath + "/" + fileName;
         }
