@@ -27,6 +27,7 @@ import java.util.*;
  * @author LT-0024
  */
 public class KafkaSinkMysql {
+    public static final String STRING = "0";
     /**
      * 使用指定类初始化日志对象
      */
@@ -60,7 +61,7 @@ public class KafkaSinkMysql {
                 constant.topic,
                 new SimpleStringSchema(),
                 props);
-        if(!constant.startFromTimestamp.equals("0")){
+        if(!STRING.equals(constant.startFromTimestamp)){
             stream.setStartFromTimestamp(Long.parseLong(constant.startFromTimestamp));
         }
         SingleOutputStreamOperator<OrderDetail> empStream = env.addSource(stream).setParallelism(Integer.parseInt(constant.parallelism))
