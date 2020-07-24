@@ -27,11 +27,12 @@ import java.util.*;
  * @author LT-0024
  */
 public class KafkaSinkMysql {
+    //使用指定类初始化日志对象
     private static Logger logger = LoggerFactory.getLogger(KafkaSinkMysql.class);
     public static void main(String[] args) throws Exception {
         final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
 //    设置检查点时间为10秒
-        env.enableCheckpointing(5000);
+        env.enableCheckpointing(60000);
 //    设置检查模式  恰好一次
         env.getCheckpointConfig().setCheckpointingMode(CheckpointingMode.EXACTLY_ONCE);
 //    设置检查点之间的最小暂停时间
@@ -62,12 +63,12 @@ public class KafkaSinkMysql {
                         //Gson gson = new Gson();
                         String[] list = string.split(",");
                         OrderDetail orderDetail = new OrderDetail();
-                        orderDetail.setBillno(list[2].replaceAll("\"",""));
-                        orderDetail.setDjlb(list[3].replaceAll("\"",""));
-                        orderDetail.setHjzje(Double.valueOf(list[4].replaceAll("\"","")));
-                        orderDetail.setHjzke(Double.valueOf(list[5].replaceAll("\"","")));
-                        orderDetail.setMkt(list[1].replaceAll("\"",""));
-                        orderDetail.setRqsj(list[0].replaceAll("\"|\'",""));
+                        orderDetail.setBillno(list[1].replaceAll("\"",""));
+                        orderDetail.setDjlb(list[4].replaceAll("\"",""));
+                        orderDetail.setHjzje(Double.valueOf(list[5].replaceAll("\"","")));
+                        orderDetail.setHjzke(Double.valueOf(list[6].replaceAll("\"","")));
+                        orderDetail.setMkt(list[3].replaceAll("\"",""));
+                        orderDetail.setRqsj(list[2].replaceAll("\"|\'",""));
                         return orderDetail;
                     }
                 });
