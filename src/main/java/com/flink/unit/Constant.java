@@ -24,4 +24,5 @@ public class Constant {
     public  final String initialSiz = PropertiesUnit.getStringByKey("dataSource.setInitialSiz", "config.properties");
     public  final String maxTota = PropertiesUnit.getStringByKey("dataSource.setMaxTota", "config.properties");
     public  final String minIdle = PropertiesUnit.getStringByKey("dataSource.setMinIdle", "config.properties");
+    public  final String startFromTimestamp = PropertiesUnit.getStringByKey("startFromTimestamp", "config.properties");
 }

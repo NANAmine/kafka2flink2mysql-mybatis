@@ -34,30 +34,36 @@ public class KafkaSinkMysql {
     public static void main(String[] args) throws Exception {
         final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
 //    设置检查点时间为10秒
-        env.enableCheckpointing(60000);
+        //env.enableCheckpointing(60000);
 //    设置检查模式  恰好一次
-        env.getCheckpointConfig().setCheckpointingMode(CheckpointingMode.EXACTLY_ONCE);
+        //env.getCheckpointConfig().setCheckpointingMode(CheckpointingMode.EXACTLY_ONCE);
 //    设置检查点之间的最小暂停时间
-        env.getCheckpointConfig().setMinPauseBetweenCheckpoints(500);
+        //env.getCheckpointConfig().setMinPauseBetweenCheckpoints(500);
 //    设置检查点超时 60秒
-        env.getCheckpointConfig().setCheckpointTimeout(60000);
+       // env.getCheckpointConfig().setCheckpointTimeout(60000);
 //    设置最大并发检查点
-        env.getCheckpointConfig().setMaxConcurrentCheckpoints(1);
+       // env.getCheckpointConfig().setMaxConcurrentCheckpoints(1);
 //    外部的检查点  保留撤销
-        env.getCheckpointConfig().enableExternalizedCheckpoints(CheckpointConfig.ExternalizedCheckpointCleanup.RETAIN_ON_CANCELLATION);
+       // env.getCheckpointConfig().enableExternalizedCheckpoints(CheckpointConfig.ExternalizedCheckpointCleanup.RETAIN_ON_CANCELLATION);
 
         Properties props = new Properties();
         Constant constant = new Constant();
         props.put("bootstrap.servers", constant.brokers);
         props.put("group.id", constant.kafka_group);
+        props.setProperty("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
+        props.setProperty("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
         props.put("enable.auto.commit", constant.commit);
         props.put("auto.offset.reset", constant.reset);
         logger.info("开始消费kafka数据");
-        SingleOutputStreamOperator<OrderDetail> empStream = env.addSource(new FlinkKafkaConsumer011<String>(
+        FlinkKafkaConsumer011<String> stream = new FlinkKafkaConsumer011<String>(
                 //这个 kafka topic 需和生产消息的 topic 一致
                 constant.topic,
                 new SimpleStringSchema(),
-                props)).setParallelism(Integer.parseInt(constant.parallelism))
+                props);
+        if(!constant.startFromTimestamp.equals("0")){
+            stream.setStartFromTimestamp(Long.parseLong(constant.startFromTimestamp));
+        }
+        SingleOutputStreamOperator<OrderDetail> empStream = env.addSource(stream).setParallelism(Integer.parseInt(constant.parallelism))
                 .map(new MapFunction<String, OrderDetail>() {
                     //解析字符串成JSON对象
                     @Override
