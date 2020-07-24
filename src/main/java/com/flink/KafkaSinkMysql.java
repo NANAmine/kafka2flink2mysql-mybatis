@@ -35,17 +35,17 @@ public class KafkaSinkMysql {
     public static void main(String[] args) throws Exception {
         final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
 //    设置检查点时间为10秒
-        //env.enableCheckpointing(60000);
+        env.enableCheckpointing(60000);
 //    设置检查模式  恰好一次
-        //env.getCheckpointConfig().setCheckpointingMode(CheckpointingMode.EXACTLY_ONCE);
+        env.getCheckpointConfig().setCheckpointingMode(CheckpointingMode.EXACTLY_ONCE);
 //    设置检查点之间的最小暂停时间
-        //env.getCheckpointConfig().setMinPauseBetweenCheckpoints(500);
+        env.getCheckpointConfig().setMinPauseBetweenCheckpoints(500);
 //    设置检查点超时 60秒
-       // env.getCheckpointConfig().setCheckpointTimeout(60000);
+        env.getCheckpointConfig().setCheckpointTimeout(60000);
 //    设置最大并发检查点
-       // env.getCheckpointConfig().setMaxConcurrentCheckpoints(1);
+        env.getCheckpointConfig().setMaxConcurrentCheckpoints(1);
 //    外部的检查点  保留撤销
-       // env.getCheckpointConfig().enableExternalizedCheckpoints(CheckpointConfig.ExternalizedCheckpointCleanup.RETAIN_ON_CANCELLATION);
+        env.getCheckpointConfig().enableExternalizedCheckpoints(CheckpointConfig.ExternalizedCheckpointCleanup.RETAIN_ON_CANCELLATION);
 
         Properties props = new Properties();
         Constant constant = new Constant();
