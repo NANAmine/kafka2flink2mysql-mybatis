@@ -27,7 +27,9 @@ import java.util.*;
  * @author LT-0024
  */
 public class KafkaSinkMysql {
-    //使用指定类初始化日志对象
+    /**
+     * 使用指定类初始化日志对象
+     */
     private static Logger logger = LoggerFactory.getLogger(KafkaSinkMysql.class);
     public static void main(String[] args) throws Exception {
         final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
