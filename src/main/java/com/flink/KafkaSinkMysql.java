@@ -51,8 +51,8 @@ public class KafkaSinkMysql {
         Constant constant = new Constant();
         props.put("bootstrap.servers", constant.brokers);
         props.put("group.id", constant.kafka_group);
-        props.setProperty("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
-        props.setProperty("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
+        props.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
+        props.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
         props.put("enable.auto.commit", constant.commit);
         props.put("auto.offset.reset", constant.reset);
         logger.info("开始消费kafka数据");
