@@ -18,9 +18,11 @@ import org.apache.flink.streaming.api.windowing.time.Time;
 import org.apache.flink.streaming.api.windowing.windows.TimeWindow;
 import org.apache.flink.streaming.connectors.kafka.FlinkKafkaConsumer011;
 import org.apache.flink.util.Collector;
+import org.apache.log4j.PropertyConfigurator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
 import java.util.*;
 
 /**
@@ -33,6 +35,7 @@ public class KafkaSinkMysql {
      */
     private static Logger logger = LoggerFactory.getLogger(KafkaSinkMysql.class);
     public static void main(String[] args) throws Exception {
+        PropertyConfigurator.configure(System.getProperty("user.dir") + "/conf/log4j.properties");
         final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
 //    设置检查点时间为10秒
         env.enableCheckpointing(60000);
@@ -55,7 +58,7 @@ public class KafkaSinkMysql {
         props.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
         props.put("enable.auto.commit", constant.commit);
         props.put("auto.offset.reset", constant.reset);
-        logger.info("开始消费kafka数据");
+        logger.debug("开始消费kafka数据");
         FlinkKafkaConsumer011<String> stream = new FlinkKafkaConsumer011<String>(
                 //这个 kafka topic 需和生产消息的 topic 一致
                 constant.topic,
