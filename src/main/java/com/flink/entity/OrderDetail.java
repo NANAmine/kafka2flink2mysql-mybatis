@@ -32,13 +32,19 @@ public class OrderDetail {
      */
     public Double hjzke;
 
-    public OrderDetail(String billno, String mkt, String djlb, String rqsj, Double hjzje, Double hjzke) {
+    /**
+     * 身份证号
+     */
+    public String shgwkh;
+
+    public OrderDetail(String billno, String mkt, String djlb, String rqsj, Double hjzje, Double hjzke,String shgwkh) {
         this.billno = billno;
         this.mkt = mkt;
         this.djlb = djlb;
         this.rqsj = rqsj;
         this.hjzje = hjzje;
         this.hjzke = hjzke;
+        this.shgwkh = shgwkh;
     }
 
     public OrderDetail() {
@@ -54,6 +60,7 @@ public class OrderDetail {
                 ", rqsj='" + rqsj + '\'' +
                 ", hjzje='" + hjzje + '\'' +
                 ", hjzke='" + hjzke + '\'' +
+                ", shgwkh='" + shgwkh + '\'' +
                 '}';
     }
 
@@ -103,6 +110,14 @@ public class OrderDetail {
 
     public void setHjzke(Double hjzke) {
         this.hjzke = hjzke;
+    }
+
+    public String getShgwkh() {
+        return shgwkh;
+    }
+
+    public void setShgwkh(String shgwkh) {
+        this.shgwkh = shgwkh;
     }
 
     @Override

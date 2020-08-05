@@ -30,7 +30,7 @@ public class SinkOrderToMySql extends RichSinkFunction<List<OrderDetail>> {
         super.open(parameters);
         dataSource = new BasicDataSource();
         connection = getConnection(dataSource);
-        String sql = "insert into eop_online_ddmx(rqsj, mkt, billno,  djlb, hjzje, hjzke) values(?, ?, ?, ?, ?, ?);";
+        String sql = "insert into eop_online_ddmx(rqsj, mkt, billno,  djlb, hjzje, hjzke, shgwkh) values(?, ?, ?, ?, ?, ?, ?);";
         ps = this.connection.prepareStatement(sql);
     }
 
@@ -63,6 +63,7 @@ public class SinkOrderToMySql extends RichSinkFunction<List<OrderDetail>> {
             ps.setString(4, orderDetail.getDjlb());
             ps.setDouble(5, orderDetail.getHjzje());
             ps.setDouble(6, orderDetail.getHjzke());
+            ps.setString(7, orderDetail.getShgwkh());
             ps.addBatch();
         }
         //批量后执行

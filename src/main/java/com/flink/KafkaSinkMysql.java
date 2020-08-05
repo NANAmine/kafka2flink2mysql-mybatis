@@ -35,7 +35,7 @@ public class KafkaSinkMysql {
      */
     private static Logger logger = LoggerFactory.getLogger(KafkaSinkMysql.class);
     public static void main(String[] args) throws Exception {
-        PropertyConfigurator.configure(System.getProperty("user.dir") + "/conf/log4j.properties");
+       // PropertyConfigurator.configure(System.getProperty("user.dir") + "/conf/log4j.properties");
         final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
 //    设置检查点时间为10秒
         env.enableCheckpointing(60000);
@@ -76,6 +76,7 @@ public class KafkaSinkMysql {
                         String[] list = string.split(",");
                         OrderDetail orderDetail = new OrderDetail();
                         orderDetail.setBillno(list[1].replaceAll("\"",""));
+                        orderDetail.setShgwkh(list[7].replaceAll("\"",""));
                         orderDetail.setDjlb(list[4].replaceAll("\"",""));
                         orderDetail.setHjzje(Double.valueOf(list[5].replaceAll("\"","")));
                         orderDetail.setHjzke(Double.valueOf(list[6].replaceAll("\"","")));
