@@ -18,9 +18,11 @@ public class SinkOrderToMySql extends RichSinkFunction<List<OrderDetail>> {
     PreparedStatement ps;
     BasicDataSource dataSource;
     String table;
+    String topic;
     private Connection connection;
-    public SinkOrderToMySql(String table) {
+    public SinkOrderToMySql(String table,String topic) {
         this.table = table;
+        this.topic = topic;
     }
     /**
      * open() 方法中建立连接，这样不用每次 invoke 的时候都要建立连接和释放连接
@@ -34,7 +36,9 @@ public class SinkOrderToMySql extends RichSinkFunction<List<OrderDetail>> {
         dataSource = new BasicDataSource();
         connection = getConnection(dataSource);
         String sql = "insert into "+table+"(rqsj, mkt, billno,  djlb, hjzje, hjzke, shgwkh) values(?, ?, ?, ?, ?, ?, ?);";
-        System.out.println(sql);
+        //System.out.println(topic);
+        //System.out.println(sql);
+        //System.out.println("------------------------------------------------------");
         ps = this.connection.prepareStatement(sql);
     }
 
@@ -44,9 +48,11 @@ public class SinkOrderToMySql extends RichSinkFunction<List<OrderDetail>> {
         //关闭连接和释放资源
         if (connection != null) {
             connection.close();
+            //System.out.println("关闭连接和释放资源");
         }
         if (ps != null) {
             ps.close();
+            //System.out.println("关闭ps");
         }
     }
 
@@ -89,7 +95,7 @@ public class SinkOrderToMySql extends RichSinkFunction<List<OrderDetail>> {
         Connection con = null;
         try {
             con = dataSource.getConnection();
-            System.out.println("创建连接池：" + con);
+            //System.out.println("创建连接池：" + con);
         } catch (Exception e) {
             System.out.println("-----------mysql get connection has exception , msg = " + e.getMessage());
         }

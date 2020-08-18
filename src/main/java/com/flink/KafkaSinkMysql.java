@@ -37,20 +37,23 @@ public class KafkaSinkMysql {
         env.getCheckpointConfig().setMaxConcurrentCheckpoints(1);
 //    外部的检查点  保留撤销
         env.getCheckpointConfig().enableExternalizedCheckpoints(CheckpointConfig.ExternalizedCheckpointCleanup.RETAIN_ON_CANCELLATION);
-
-        Properties props = new Properties();
         Constant constant = new Constant();
+        Properties props = new Properties();
         props.put("bootstrap.servers", constant.brokers);
-        props.put("group.id", constant.kafka_group);
         props.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
         props.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
         props.put("enable.auto.commit", constant.commit);
         props.put("auto.offset.reset", constant.reset);
         logger.debug("开始消费kafka数据");
-        OrderDetailStreamUnit.startStream(env,props,constant,constant.topic1,constant.table1);
-        //OrderDetailStreamUnit.StartStream(env,props,constant,constant.topic1,constant.table2);
-        //OrderDetailStreamUnit.StartStream(env,props,constant,constant.topic2,constant.table2);
-        //OrderDetailStreamUnit.StartStream(env,props,constant,constant.topic3,constant.table2);
+        OrderDetailStreamUnit.startStream(env,constant,constant.topic1,constant.table1,constant.kafka_group1,props);
+        OrderDetailStreamUnit.startStream(env,constant,constant.topic1,constant.table2,constant.kafka_group2,props);
+        OrderDetailStreamUnit.startStream(env,constant,constant.topic2,constant.table2,constant.kafka_group3,props);
+        OrderDetailStreamUnit.startStream(env,constant,constant.topic3,constant.table2,constant.kafka_group4,props);
+        try {
+            env.execute("flink kafka to Mysql");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         /*FlinkKafkaConsumer011<String> stream = new FlinkKafkaConsumer011<String>(
                 //这个 kafka topic 需和生产消息的 topic 一致
                 constant.topic1,

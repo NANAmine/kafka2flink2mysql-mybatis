@@ -24,12 +24,14 @@ import java.util.*;
  * @Version 1.0
  */
 public class OrderDetailStreamUnit {
+
     /**
      * 使用指定类初始化日志对象
      */
     private static Logger logger = LoggerFactory.getLogger(KafkaSinkMysql.class);
     public static final String STRING = "0";
-    public static void startStream(StreamExecutionEnvironment env,Properties props,Constant constant,String topic,String table){
+    public static void startStream(StreamExecutionEnvironment env, Constant constant, final String topic, String table, String group, Properties props){
+        props.put("group.id", group);
         FlinkKafkaConsumer011<String> stream = new FlinkKafkaConsumer011<String>(
                 //这个 kafka topic 需和生产消息的 topic 一致
                 topic,
@@ -69,17 +71,12 @@ public class OrderDetailStreamUnit {
                 set.addAll(orderDetails);
                 newList.addAll(set);
                 if (orderDetails.size() > 0) {
-                    System.out.println("10 秒内收集到 orderDetails 的数据条数是：" + orderDetails.size());
+                    System.out.println("10 秒内收集到"+ topic +" 的数据条数是：" + orderDetails.size());
                     System.out.println("重复数据条数" + (orderDetails.size()-newList.size()));
                     out.collect(newList);
                 }
             }
-        }).addSink(new SinkOrderToMySql(table));
+        }).addSink(new SinkOrderToMySql(table,topic));
         //empStream.print(); //调度输出
-        try {
-            env.execute("flink kafka to Mysql");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 }

@@ -12,7 +12,10 @@ import java.util.ResourceBundle;
  */
 public class Constant {
     public  final String brokers = PropertiesUnit.getStringByKey("brokers", "config.properties");
-    public  final String kafka_group = PropertiesUnit.getStringByKey("kafka_group", "config.properties");
+    public  final String kafka_group1 = PropertiesUnit.getStringByKey("kafka_group1", "config.properties");
+    public  final String kafka_group2 = PropertiesUnit.getStringByKey("kafka_group2", "config.properties");
+    public  final String kafka_group3 = PropertiesUnit.getStringByKey("kafka_group3", "config.properties");
+    public  final String kafka_group4 = PropertiesUnit.getStringByKey("kafka_group4", "config.properties");
     public  final String topic1 = PropertiesUnit.getStringByKey("topic1", "config.properties");
     public  final String topic2 = PropertiesUnit.getStringByKey("topic2", "config.properties");
     public  final String topic3 = PropertiesUnit.getStringByKey("topic3", "config.properties");
