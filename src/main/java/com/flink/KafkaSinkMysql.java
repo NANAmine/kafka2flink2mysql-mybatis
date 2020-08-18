@@ -45,7 +45,7 @@ public class KafkaSinkMysql {
         props.put("enable.auto.commit", constant.commit);
         props.put("auto.offset.reset", constant.reset);
         logger.debug("开始消费kafka数据");
-        OrderDetailStreamUnit.startStream(env,constant,constant.topic1,constant.table1,constant.kafka_group1,props);
+        //OrderDetailStreamUnit.startStream(env,constant,constant.topic1,constant.table1,constant.kafka_group1,props);
         OrderDetailStreamUnit.startStream(env,constant,constant.topic1,constant.table2,constant.kafka_group2,props);
         OrderDetailStreamUnit.startStream(env,constant,constant.topic2,constant.table2,constant.kafka_group3,props);
         OrderDetailStreamUnit.startStream(env,constant,constant.topic3,constant.table2,constant.kafka_group4,props);

@@ -49,7 +49,7 @@ public class OrderDetailStreamUnit {
                         String[] list = string.split(",");
                         OrderDetail orderDetail = new OrderDetail();
                         orderDetail.setBillno(list[1].replaceAll("\"",""));
-                        orderDetail.setShgwkh(list[7].replaceAll("\"",""));
+                        //orderDetail.setShgwkh(list[7].replaceAll("\"",""));
                         orderDetail.setDjlb(list[4].replaceAll("\"",""));
                         orderDetail.setHjzje(Double.valueOf(list[5].replaceAll("\"","")));
                         orderDetail.setHjzke(Double.valueOf(list[6].replaceAll("\"","")));
