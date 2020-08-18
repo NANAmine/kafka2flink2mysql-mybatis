@@ -29,7 +29,7 @@ public class OrderDetailStreamUnit {
      */
     private static Logger logger = LoggerFactory.getLogger(KafkaSinkMysql.class);
     public static final String STRING = "0";
-    public static void StartStream(StreamExecutionEnvironment env,Properties props,Constant constant,String topic,String table){
+    public static void startStream(StreamExecutionEnvironment env,Properties props,Constant constant,String topic,String table){
         FlinkKafkaConsumer011<String> stream = new FlinkKafkaConsumer011<String>(
                 //这个 kafka topic 需和生产消息的 topic 一致
                 topic,
