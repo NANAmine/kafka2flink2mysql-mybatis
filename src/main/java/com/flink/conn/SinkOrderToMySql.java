@@ -17,8 +17,11 @@ import java.util.List;
 public class SinkOrderToMySql extends RichSinkFunction<List<OrderDetail>> {
     PreparedStatement ps;
     BasicDataSource dataSource;
+    String table;
     private Connection connection;
-
+    public SinkOrderToMySql(String table) {
+        this.table = table;
+    }
     /**
      * open() 方法中建立连接，这样不用每次 invoke 的时候都要建立连接和释放连接
      *
@@ -30,7 +33,8 @@ public class SinkOrderToMySql extends RichSinkFunction<List<OrderDetail>> {
         super.open(parameters);
         dataSource = new BasicDataSource();
         connection = getConnection(dataSource);
-        String sql = "insert into eop_online_ddmx(rqsj, mkt, billno,  djlb, hjzje, hjzke, shgwkh) values(?, ?, ?, ?, ?, ?, ?);";
+        String sql = "insert into "+table+"(rqsj, mkt, billno,  djlb, hjzje, hjzke, shgwkh) values(?, ?, ?, ?, ?, ?, ?);";
+        System.out.println(sql);
         ps = this.connection.prepareStatement(sql);
     }
 

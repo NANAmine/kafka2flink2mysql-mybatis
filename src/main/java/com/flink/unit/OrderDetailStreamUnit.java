@@ -1,59 +1,38 @@
-package com.flink;
+package com.flink.unit;
 
-/**
- * Created by Administrator on 2020/7/4.
- */
-import com.flink.unit.Constant;
-import com.flink.unit.OrderDetailStreamUnit;
-import org.apache.flink.streaming.api.CheckpointingMode;
-import org.apache.flink.streaming.api.environment.CheckpointConfig;
+import com.flink.KafkaSinkMysql;
+import com.flink.conn.SinkOrderToMySql;
+import com.flink.entity.OrderDetail;
+import org.apache.flink.api.common.functions.MapFunction;
+import org.apache.flink.api.common.serialization.SimpleStringSchema;
+import org.apache.flink.shaded.curator.org.apache.curator.shaded.com.google.common.collect.Lists;
+import org.apache.flink.streaming.api.datastream.SingleOutputStreamOperator;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
+import org.apache.flink.streaming.api.functions.windowing.AllWindowFunction;
+import org.apache.flink.streaming.api.windowing.time.Time;
+import org.apache.flink.streaming.api.windowing.windows.TimeWindow;
+import org.apache.flink.streaming.connectors.kafka.FlinkKafkaConsumer011;
+import org.apache.flink.util.Collector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
 /**
- * @author LT-0024
+ * @Author LT-0024
+ * @Date 2020/8/18 11:15
+ * @Version 1.0
  */
-public class KafkaSinkMysql {
-    public static final String STRING = "0";
+public class OrderDetailStreamUnit {
     /**
      * 使用指定类初始化日志对象
      */
     private static Logger logger = LoggerFactory.getLogger(KafkaSinkMysql.class);
-    public static void main(String[] args) throws Exception {
-       // PropertyConfigurator.configure(System.getProperty("user.dir") + "/conf/log4j.properties");
-        final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
-//    设置检查点时间为10秒
-        env.enableCheckpointing(60000);
-//    设置检查模式  恰好一次
-        env.getCheckpointConfig().setCheckpointingMode(CheckpointingMode.EXACTLY_ONCE);
-//    设置检查点之间的最小暂停时间
-        env.getCheckpointConfig().setMinPauseBetweenCheckpoints(500);
-//    设置检查点超时 60秒
-        env.getCheckpointConfig().setCheckpointTimeout(60000);
-//    设置最大并发检查点
-        env.getCheckpointConfig().setMaxConcurrentCheckpoints(1);
-//    外部的检查点  保留撤销
-        env.getCheckpointConfig().enableExternalizedCheckpoints(CheckpointConfig.ExternalizedCheckpointCleanup.RETAIN_ON_CANCELLATION);
-
-        Properties props = new Properties();
-        Constant constant = new Constant();
-        props.put("bootstrap.servers", constant.brokers);
-        props.put("group.id", constant.kafka_group);
-        props.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
-        props.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
-        props.put("enable.auto.commit", constant.commit);
-        props.put("auto.offset.reset", constant.reset);
-        logger.debug("开始消费kafka数据");
-        OrderDetailStreamUnit.StartStream(env,props,constant,constant.topic1,constant.table1);
-        //OrderDetailStreamUnit.StartStream(env,props,constant,constant.topic1,constant.table2);
-        //OrderDetailStreamUnit.StartStream(env,props,constant,constant.topic2,constant.table2);
-        //OrderDetailStreamUnit.StartStream(env,props,constant,constant.topic3,constant.table2);
-        /*FlinkKafkaConsumer011<String> stream = new FlinkKafkaConsumer011<String>(
+    public static final String STRING = "0";
+    public static void StartStream(StreamExecutionEnvironment env,Properties props,Constant constant,String topic,String table){
+        FlinkKafkaConsumer011<String> stream = new FlinkKafkaConsumer011<String>(
                 //这个 kafka topic 需和生产消息的 topic 一致
-                constant.topic1,
+                topic,
                 new SimpleStringSchema(),
                 props);
         if(!STRING.equals(constant.startFromTimestamp)){
@@ -85,7 +64,7 @@ public class KafkaSinkMysql {
             public void apply(TimeWindow window, Iterable<OrderDetail> values, Collector<List<OrderDetail>> out) throws Exception {
                 ArrayList<OrderDetail> orderDetails = Lists.newArrayList(values);
                 //数据去重
-                Set set = new  HashSet();
+                Set set = new HashSet();
                 List<OrderDetail> newList = new  ArrayList();
                 set.addAll(orderDetails);
                 newList.addAll(set);
@@ -95,8 +74,12 @@ public class KafkaSinkMysql {
                     out.collect(newList);
                 }
             }
-        }).addSink(new SinkOrderToMySql());
-        empStream.print(); //调度输出
-        env.execute("flink kafka to Mysql");*/
+        }).addSink(new SinkOrderToMySql(table));
+        //empStream.print(); //调度输出
+        try {
+            env.execute("flink kafka to Mysql");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
