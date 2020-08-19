@@ -49,10 +49,18 @@ public class OrderDetailStreamUnit {
                         String[] list = string.split(",");
                         OrderDetail orderDetail = new OrderDetail();
                         orderDetail.setBillno(list[1].replaceAll("\"",""));
-                        //orderDetail.setShgwkh(list[7].replaceAll("\"",""));
+                        orderDetail.setShgwkh(list[7].replaceAll("\"",""));
                         orderDetail.setDjlb(list[4].replaceAll("\"",""));
-                        orderDetail.setHjzje(Double.valueOf(list[5].replaceAll("\"","")));
-                        orderDetail.setHjzke(Double.valueOf(list[6].replaceAll("\"","")));
+                        String value5= list[5].replaceAll("\"","");
+                        String value6= list[6].replaceAll("\"","");
+                        if("".equals(value5)){
+                            value5="0";
+                        }
+                        if("".equals(value6)){
+                            value6="0";
+                        }
+                        orderDetail.setHjzje(Double.valueOf(value5));
+                        orderDetail.setHjzke(Double.valueOf(value6));
                         orderDetail.setMkt(list[3].replaceAll("\"",""));
                         orderDetail.setRqsj(list[2].replaceAll("\"|\'",""));
                         return orderDetail;
