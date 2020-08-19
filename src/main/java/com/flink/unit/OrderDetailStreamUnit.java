@@ -48,6 +48,7 @@ public class OrderDetailStreamUnit {
                         //Gson gson = new Gson();
                         String[] list = string.split(",");
                         OrderDetail orderDetail = new OrderDetail();
+                        logger.error(list.length+"-----"+string);
                         orderDetail.setBillno(list[1].replaceAll("\"",""));
                         orderDetail.setShgwkh(list[7].replaceAll("\"",""));
                         orderDetail.setDjlb(list[4].replaceAll("\"",""));
@@ -85,6 +86,6 @@ public class OrderDetailStreamUnit {
                 }
             }
         }).addSink(new SinkOrderToMySql(table,topic));
-        //empStream.print(); //调度输出
+        empStream.print(); //调度输出
     }
 }
