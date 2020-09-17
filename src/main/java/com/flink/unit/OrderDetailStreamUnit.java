@@ -85,7 +85,7 @@ public class OrderDetailStreamUnit {
                     out.collect(newList);
                 }
             }
-        }).addSink(new SinkOrderToMySql(table,topic));
+        }).addSink(new SinkOrderToMySql());
         empStream.print(); //调度输出
     }
 }
