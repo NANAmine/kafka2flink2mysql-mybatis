@@ -5,9 +5,12 @@ import com.flink.unit.Constant;
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.apache.flink.configuration.Configuration;
 import org.apache.flink.streaming.api.functions.sink.RichSinkFunction;
+import org.apache.ibatis.annotations.Case;
 import org.apache.ibatis.session.SqlSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.sql.Connection;
 import java.util.List;
 
 /**
@@ -16,6 +19,12 @@ import java.util.List;
  * @date 2020/7/4
  */
 public class SinkOrderToMySql extends RichSinkFunction<List<OrderDetail>> {
+    String table;
+    String topic;
+    public SinkOrderToMySql(String table,String topic) {
+        this.table = table;
+        this.topic = topic;
+    }
     private static final Logger LOG = LoggerFactory.getLogger(SinkOrderToMySql.class);
     @Override
     public void invoke(List<OrderDetail> value, Context context) throws Exception {
@@ -25,10 +34,14 @@ public class SinkOrderToMySql extends RichSinkFunction<List<OrderDetail>> {
         try{
             //插入
             LOG.info("MysqlSinkFunction start to do insert data...");
-            orderDetailMapper.saveListAll(value);
+            if ("all_eop_online_ddmx".equals(table)) {
+                orderDetailMapper.saveListAll(value);
+            } else if ("eop_online_ddmx".equals(table)) {
+                orderDetailMapper.saveListSanYa(value);
+            }
             sqlSession.commit();
             LOG.info("MysqlSinkFunction commit transaction success...");
-            System.out.println("成功了插入了" + value.size() + "行数据");
+            System.out.println("成功插入" +topic+"--"+value.size() + "行数据");
         }
         catch (Throwable e){
             sqlSession.rollback();

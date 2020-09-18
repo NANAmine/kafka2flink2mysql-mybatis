@@ -16,12 +16,12 @@ public interface OrderDetailMapper {
      * @param list
      * @return
      */
-    int saveListAll(@Param("orderLists")List<OrderDetail> list);
+    int saveListAll(List<OrderDetail> list);
 
     /**
      * 批量保存三亚
      * @param list
      * @return
      */
-    int saveListSanYa(@Param("orderLists")List<OrderDetail> list);
+    int saveListSanYa(List<OrderDetail> list);
 }

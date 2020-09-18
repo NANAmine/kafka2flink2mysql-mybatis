@@ -1,8 +1,21 @@
 <?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.flink.mapper.OrderDetailMapper">
-    <!--查询关键字匹配 -->
-    <insert id="saveList" parameterType="java.util.List">
+    <!--插入三亚eop -->
+    <insert id="saveListSanYa" parameterType="java.util.List">
         insert into eop_online_ddmx(
+        rqsj, mkt, billno, djlb, hjzje, hjzke, shgwkh
+        )VALUES
+        <foreach collection ="list" item="orderDetail" index= "index" separator =",">
+            (
+            #{orderDetail.rqsj}, #{orderDetail.mkt}, #{orderDetail.billno},
+            #{orderDetail.djlb}, #{orderDetail.hjzje}, #{orderDetail.hjzke}, #{orderDetail.shgwkh}
+            )
+        </foreach>
+    </insert>
+    <!--插入全门店eop -->
+    <insert id="saveListAll" parameterType="java.util.List">
+        insert into all_eop_online_ddmx(
         rqsj, mkt, billno, djlb, hjzje, hjzke, shgwkh
         )VALUES
         <foreach collection ="list" item="orderDetail" index= "index" separator =",">
