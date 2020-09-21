@@ -1,16 +1,11 @@
 package com.flink.conn;
 import com.flink.entity.OrderDetail;
 import com.flink.mapper.OrderDetailMapper;
-import com.flink.unit.Constant;
-import org.apache.commons.dbcp2.BasicDataSource;
-import org.apache.flink.configuration.Configuration;
 import org.apache.flink.streaming.api.functions.sink.RichSinkFunction;
-import org.apache.ibatis.annotations.Case;
 import org.apache.ibatis.session.SqlSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.sql.Connection;
 import java.util.List;
 
 /**
@@ -29,18 +24,22 @@ public class SinkOrderToMySql extends RichSinkFunction<List<OrderDetail>> {
     @Override
     public void invoke(List<OrderDetail> value, Context context) throws Exception {
         SqlSession sqlSession = MybatisSessionFactory.getSqlSessionFactory().openSession();
-        OrderDetailMapper orderDetailMapper  = sqlSession.getMapper(OrderDetailMapper .class);
-
+        OrderDetailMapper orderDetailMapper  = sqlSession.getMapper(OrderDetailMapper.class);
         try{
             //插入
-            LOG.info("MysqlSinkFunction start to do insert data...");
+            LOG.error("MysqlSinkFunction start to do insert data0"+table);
             if ("all_eop_online_ddmx".equals(table)) {
+                LOG.error("MysqlSinkFunction start to do insert data1");
                 orderDetailMapper.saveListAll(value);
+                LOG.error("MysqlSinkFunction start to do insert data2");
             } else if ("eop_online_ddmx".equals(table)) {
+                LOG.error("MysqlSinkFunction start to do insert data1");
                 orderDetailMapper.saveListSanYa(value);
+                LOG.error("MysqlSinkFunction start to do insert data2");
             }
+            LOG.error("MysqlSinkFunction start to do insert data3");
             sqlSession.commit();
-            LOG.info("MysqlSinkFunction commit transaction success...");
+            LOG.error("MysqlSinkFunction commit transaction success");
             System.out.println("成功插入" +topic+"--"+value.size() + "行数据");
         }
         catch (Throwable e){

@@ -69,7 +69,7 @@ public class OrderDetailStreamUnit {
                 });
 
         //开个一分钟的窗口去聚合
-        logger.info("开启timeWindow");
+        logger.error("开启timeWindow"+table+topic);
         empStream.timeWindowAll(Time.seconds(Long.parseLong(constant.timeWindow))).apply(new AllWindowFunction<OrderDetail, List<OrderDetail>, TimeWindow>() {
             @Override
             public void apply(TimeWindow window, Iterable<OrderDetail> values, Collector<List<OrderDetail>> out) throws Exception {
@@ -86,6 +86,6 @@ public class OrderDetailStreamUnit {
                 }
             }
         }).addSink(new SinkOrderToMySql(table,topic));
-        empStream.print(); //调度输出
+        //empStream.print(); //调度输出
     }
 }

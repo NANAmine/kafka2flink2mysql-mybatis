@@ -29,10 +29,10 @@ public class MybatisSessionFactory {
                 LOG.error("create MybatisSessionFactory read mybatis-config.xml cause Exception",e);
             }
             if(null!=sqlSessionFactory){
-                LOG.info("get Mybatis sqlsession sucessed....");
+                LOG.error("get Mybatis sqlsession sucessed....");
             }
             else {
-                LOG.info("get Mybatis sqlsession failed....");
+                LOG.error("get Mybatis sqlsession failed....");
             }
         }
         return sqlSessionFactory;
