@@ -27,19 +27,16 @@ public class SinkOrderToMySql extends RichSinkFunction<List<OrderDetail>> {
         OrderDetailMapper orderDetailMapper  = sqlSession.getMapper(OrderDetailMapper.class);
         try{
             //插入
-            LOG.error("MysqlSinkFunction start to do insert data0"+table);
             if ("all_eop_online_ddmx".equals(table)) {
-                LOG.error("MysqlSinkFunction start to do insert data1");
                 orderDetailMapper.saveListAll(value);
-                LOG.error("MysqlSinkFunction start to do insert data2");
             } else if ("eop_online_ddmx".equals(table)) {
-                LOG.error("MysqlSinkFunction start to do insert data1");
                 orderDetailMapper.saveListSanYa(value);
-                LOG.error("MysqlSinkFunction start to do insert data2");
+            }else if ("all_eop_online_ddmx_test".equals(table)) {
+                orderDetailMapper.saveListAllJpz(value);
             }
-            LOG.error("MysqlSinkFunction start to do insert data3");
             sqlSession.commit();
-            LOG.error("MysqlSinkFunction commit transaction success");
+            sqlSession.close();
+            LOG.error("MysqlSinkFunction commit transaction success"+table);
             System.out.println("成功插入" +topic+"--"+value.size() + "行数据");
         }
         catch (Throwable e){

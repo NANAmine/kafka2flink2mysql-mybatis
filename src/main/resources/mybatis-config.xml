@@ -12,9 +12,11 @@
             <transactionManager type="JDBC" />
             <dataSource type="DRUID">
                 <property name="driver" value="com.mysql.jdbc.Driver" />
-                <property name="url" value="jdbc:mysql://10.153.252.141:4000/jeesite_pro?useUnicode=true&amp;characterEncoding=UTF-8&amp;useSSL=false" />
+                <property name="url" value="jdbc:mysql://10.153.252.240:4000/jeesite_dev?useUnicode=true&amp;characterEncoding=UTF-8&amp;useSSL=false" />
                 <property name="username" value="root" />
                 <property name="password" value="123456" />
+                <property name="poolMaximumActiveConnections" value="50" />
+                <property name="poolMaximumIdleConnections" value="20" />
             </dataSource>
         </environment>
     </environments>

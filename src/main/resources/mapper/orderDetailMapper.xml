@@ -25,4 +25,16 @@
             )
         </foreach>
     </insert>
+    <!--插入全门店eop+jpz -->
+    <insert id="saveListAllJpz" parameterType="java.util.List">
+        insert into all_eop_online_ddmx_test(
+        rqsj, mkt, billno, djlb, hjzje, hjzke, shgwkh
+        )VALUES
+        <foreach collection ="list" item="orderDetail" index= "index" separator =",">
+            (
+            #{orderDetail.rqsj}, #{orderDetail.mkt}, #{orderDetail.billno},
+            #{orderDetail.djlb}, #{orderDetail.hjzje}, #{orderDetail.hjzke}, #{orderDetail.shgwkh}
+            )
+        </foreach>
+    </insert>
 </mapper>

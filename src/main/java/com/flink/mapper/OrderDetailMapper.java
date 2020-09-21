@@ -19,6 +19,13 @@ public interface OrderDetailMapper {
     int saveListAll(List<OrderDetail> list);
 
     /**
+     * 批量保存全门店
+     * @param list
+     * @return
+     */
+    int saveListAllJpz(List<OrderDetail> list);
+
+    /**
      * 批量保存三亚
      * @param list
      * @return
